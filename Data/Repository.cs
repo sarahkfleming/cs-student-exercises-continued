@@ -92,5 +92,28 @@ namespace StudentExercises.Data
 
             }
         }
+
+        public void AddExercise(Exercise exercise)
+        {
+            /*
+             * TODO: DONE Complete this method by using an INSERT statement with SQL
+             *  Remember to use SqlParameters!
+             */
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Exercise (ExerciseName, ProgrammingLanguage) Values (@ExerciseName, @ProgrammingLanguage)";
+                    cmd.Parameters.Add(new SqlParameter("@ExerciseName", exercise.ExerciseName));
+                    cmd.Parameters.Add(new SqlParameter("@ProgrammingLanguage", exercise.ProgrammingLanguage));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
+
     }
 }
