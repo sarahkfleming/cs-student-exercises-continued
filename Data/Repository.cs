@@ -112,6 +112,56 @@ namespace StudentExercises.Data
             }
         }
 
+        public List<Instructor> GetAllInstructorsWithCohort()
+        {
+            // We must "use" the database connection.
+            using (SqlConnection conn = Connection)
+            {
+                // Note, we must Open() the connection, the "using" block doesn't do that for us.
+                conn.Open();
+
+                // We must "use" commands too.
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // Here we setup the command with the SQL we want to execute before we execute it.
+                    cmd.CommandText = @"SELECT i.Id, i.FirstName, i.LastName, i.SlackHandle, i.Specialty, c.Id, c.CohortName
+                                                        FROM Instructor i INNER JOIN Cohort c on i.CohortId = c.Id";
+                    // Execute the SQL in the database and get a "reader" that will give us access to the data.
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // A list to hold the exercises we retrieve from the database.
+                    List<Instructor> instructors = new List<Instructor>();
+
+                    // Read() will return true if there's more data to read
+                    while (reader.Read())
+                    {
+                        Instructor instructor = new Instructor
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle")),
+                            Specialty = reader.GetString(reader.GetOrdinal("Specialty")),
+                            Cohort = new Cohort
+                            {
+                               Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                               CohortName = reader.GetString(reader.GetOrdinal("CohortName"))
+                            }
+                        };
+
+                        // ...and add that exercise object to our list.
+                        instructors.Add(instructor);
+                    }
+
+                    // We should Close() the reader. Unfortunately, a "using" block won't work here.
+                    reader.Close();
+
+                    // Return the list of instructors.
+                    return instructors;
+                }
+            }
+
+        }
 
 
 

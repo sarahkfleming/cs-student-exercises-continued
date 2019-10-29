@@ -45,9 +45,17 @@ namespace StudentExercises
             Console.WriteLine();
 
             // Find all instructors in the database. Include each instructor's cohort.
+            List<Instructor> instructors = repository.GetAllInstructorsWithCohort();
+            foreach (Instructor instructor in instructors)
+            {
+                Console.WriteLine($"Name: {instructor.FirstName} {instructor.LastName}");
+                Console.WriteLine($"Slack Handle: {instructor.SlackHandle}");
+                Console.WriteLine($"Cohort: {instructor.Cohort.CohortName}");
 
+            }
+            Console.WriteLine();
 
-            // Insert a new instructor into the database.Assign the instructor to an existing cohort.
+            // Insert a new instructor into the database. Assign the instructor to an existing cohort.
 
 
             // Assign an existing exercise to an existing student.
